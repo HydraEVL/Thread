@@ -73,11 +73,11 @@ thread0:Ins(instanceToDestroy)
    end
 thread0:Ins(moduleToDestroy)
 
-
 local thread0Id = thread0:Spawn(function()
     -- Thread execution code
     task.wait(5)
     print("Thread completed.")
 })
+
 thread0:WaitStopped()
 ```
