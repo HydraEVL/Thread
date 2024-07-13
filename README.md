@@ -76,7 +76,7 @@ thread0:Ins(moduleToDestroy)
 
 local thread0Id = thread0:Spawn(function()
     -- Thread execution code
-    wait(5)
+    task.wait(5)
     print("Thread completed.")
 })
 thread0:WaitStopped()
