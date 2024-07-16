@@ -1,3 +1,4 @@
+ ผมเขียนเอกสารนี้เพื่อกันลืมโมดูลที่ผมเขียนไว้ใช้เอง
 # Thread Management
 
 This repository contains utilities for managing threads in Lua scripting environments. Threads are used to execute tasks asynchronously, allowing for concurrent operations without blocking the main program flow. Below are the main functionalities provided by this module:
