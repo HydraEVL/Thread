@@ -1,89 +1,69 @@
  ผมเขียนเอกสารนี้เพื่อกันลืมโมดูลที่ผมเขียนไว้ใช้เอง
-# Thread Management
 
-This repository contains utilities for managing threads in Lua scripting environments. Threads are used to execute tasks asynchronously, allowing for concurrent operations without blocking the main program flow. Below are the main functionalities provided by this module:
+# Thread
+การทำงานแบบ Non-blocking รันงานหลายอย่างพร้อมกันโดยไม่รบกวนงานอื่น
+ผมเขียนmoduleนี้มาเพื่อจัดการและสั่ง Thread ที่ต้องการให้หยุดการทำงาน ถึงจะเป็นโครงสร้างที่มั่วๆหน่อยก็เถอะ แต่ผมคิดว่ามันดีพอแล้วสำหรับการแค่เขียนใช้เองส่วนตัว
 
-# Usage
-
-### 🔹 Creating a Thread
-
-To create a new thread workspace:
-
+## การเริ่มสร้างงานใหม่
 ```lua
 local thread0 = __Thread:New(player)
 ```
-This initializes a new thread workspace associated with the specified player object.
+เพื่อสร้างพื้นที่ทำงาน Thread ใหม่ที่เชื่อมโยงกับุผู้เล่น
 
-### 🔹 Adding Items to Remove on Thread Stop
-You can add items such as animations or instances that should be removed when the thread stops:
+## เพิ่มรายการที่จะลบออกหรือหยุดทำงานเมื่อ Thread หยุดทำงาน
+รายการที่เพิ่มได้จะเป็นประเภท AnimationTrack หรือ Instance หรือ ตัวแปรที่มีฟังก์ชั่น `:Destroy()` ตัวอย่าง:
 
 ```lua
--- Adding an AnimationTrack
+-- เพิ่ม AnimationTrack
 thread0:Anim(AnimationTrack)
 
--- Adding an Instance to be destroyed
+-- เพิ่ม Instance หรือ ตัวแปรที่มีฟังก์ชั่น :Destroy() 
 thread0:Ins(Instance)
 ```
 
-### 🔹 Spawning the Thread
-To start executing the thread's operations:
-
+## เริ่มรัน Thread 
 ```lua
 local thread0Id = thread0:Spawn(function()
-    -- Thread execution code here
+    -- code ที่ต้องการดำเนินการ
 end)
 ```
 
-### 🔹 Using .Canceled()
-When managing threads, you may want to execute specific actions when a thread is canceled or finishes normally. Here's how you can achieve this using the `.Canceled()` method:
+## วิธีใช้ `.Canceled()`
+ฟังก์ชันนี้ช่วยให้คุณกำหนดคำสั่งที่จะรันเมื่อ Thread ถูกยกเลิกหรือหลังที่มันทำงานเสร็จเองแบบปกติ
 
-- Setting Up a Cancel/Finish Callback
-    To define a function that should be called when a thread is canceled or finishes normally:
+- กำหนดฟังก์ชัน
+    เพื่อกำหนดสิ่งที่เกิดขึ้นเมื่อ Thread ถูกยกเลิกหรือทำงานเสร็จ:
     ```lua
-    -- Define the function to execute when the thread is canceled or finishes
-    local function onCancelOrFinish()
-        -- Perform actions when the thread is canceled or finishes
-        print("Thread canceled or finished.")
-    end
+    local canceled0 = thread0:Canceled(function()
+      print("Thread canceled or finished.")
+    end)
     ```
-- Assigning the Cancel/Finish Callback to a Thread
-    Next, assign this function to be called when the thread is canceled or finishes:
+- เรียกใช้ฟังก์ชั่นแบบ Manual
+    สามารถเรียกใช้ฟังก์ชั่นก่อนที่มันจะทำงานเสร็จเองแบบปกติได้
+    และฟังก์ชั่นจะไม่ถูกเรียกซ้ำเมื่อถูกใช้ไปแล้ว
     ```lua
-    local canceled0 = thread0:Canceled(onCancelOrFinish)
-    ```
-- Calling the Cancel/Finish Callback Manually
-    You can also manually trigger the callback function if needed, regardless of whether the thread was canceled or not:
-    ```lua
-    -- Call canceled0() to execute the onCancelOrFinish function manually
     canceled0()
     ```
-- Explanation<br>
-    `.Canceled()` Method: This method in Lua allows you to specify a function (`onCancelOrFinish` in this example) that will be executed when the associated thread (`thread0`) is either canceled explicitly or completes its execution normally.
-    Manual Callback: By assigning the result of `thread0:Canceled(onCancelOrFinish)` to canceled0, you can later invoke `canceled0()` to trigger the onCancelOrFinish function manually, independent of the thread's cancellation status.
-    This approach enhances control over thread management, ensuring that specific actions are taken when threads complete their tasks or are canceled during execution.
-
-### 🔹 Waiting for Thread Completion
-You can wait until the thread completes or terminates:
-
+## รอจนกว่า Thread หยุดทำงาน
+    เพื่อรอมันหยุดทำงานหรือทำงานเสร็จตามปกติก่อนที่จะเริ่ทคำสั่งในบรรทัดต่อไป
 ```lua
 thread0:WaitStopped()
 ```
 
-### 🔹 Cancelling a Thread
-To cancel the thread execution:
+## การยกเลิก Thread
+    หยุดทำงานแบบ Manual:
 ```lua
 thread0.Cancel()
 ```
-This stops the thread without removing associated items.
+เมื่อมันหยุดทำงานรายการต่างๆจะถูกหยุดและลบออกเหมือนกัน
 
-### 🔹 Clearing All Thread Workspaces
-To clear all thread workspaces associated with a player:
-
+## ยกเลิก Thread ทั้หมด
+    หยุด Thread ที่กำลังทำงานและเกี่ยวข้องกับผู้เล่นที่กำหนด
 ```lua
 __Thread.Clear(player)
 ```
 
-# Example
+# ตัวอย่าง
 ```lua
 -- Example usage of thread management
 local thread0 = __Thread:New(player)
