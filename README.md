@@ -97,4 +97,5 @@ local thread0Id = thread0:Spawn(function()
 })
 
 thread0:WaitStopped()
+print("End")
 ```
