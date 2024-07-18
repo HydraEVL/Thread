@@ -59,9 +59,9 @@ thread0.Cancel()
 
 ## ยกเลิก Thread ทั้งหมด
 หยุด Thread ที่กำลังทำงานและเกี่ยวข้องกับผู้เล่นที่กำหนด
-    ```lua
-    __Thread.Clear(player)
-    ```
+```lua
+__Thread.Clear(player)
+```
 
 # ตัวอย่าง
 ```lua
